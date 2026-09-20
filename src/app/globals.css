@@ -1,0 +1,388 @@
+@import "tailwindcss";
+
+/* ============================================================
+   VESTIGIA DESIGN SYSTEM — "Editorial Atelier"
+   Warm ivory canvas · bronze/clay accent · oversized serif display.
+   Ref: docs/upgrade.md §4 (visual language), §57 (design system)
+   ============================================================ */
+
+@theme {
+  /* ---------- COLOR ----------
+     Warm neutral ramp. Every value is warm-biased (R > G > B) so the
+     whole surface reads like unglazed porcelain rather than grey UI. */
+
+  --color-canvas: #faf7f2; /* page background — warm ivory */
+  --color-shell: #f2ece3; /* raised/inset panels — soft stone */
+  --color-stone: #e5dccf; /* dividers, quiet fills */
+  --color-clay: #c9b8a3; /* image placeholder, muted borders */
+  --color-sand: #ab937a; /* decorative mid-tone */
+
+  /* Ink — text. Warm near-black, never pure #000. */
+  --color-ink: #1c1815; /* primary text      16.2:1 on canvas */
+  --color-ink-soft: #453d36; /* secondary heading  9.8:1 on canvas */
+  --color-ink-muted: #6b615a; /* body secondary     5.7:1 on canvas */
+  --color-ink-faint: #8a7f75; /* meta/labels — LARGE OR NON-ESSENTIAL TEXT ONLY */
+
+  /* Bronze — the single accent. Carries CTAs, rules, active states. */
+  --color-bronze: #9c6b43; /* 4.2:1 — large text, borders, icons only */
+  --color-bronze-deep: #7e5433; /* 6.0:1 — safe for body-size accent text */
+  --color-bronze-tint: #efe3d6; /* accent wash backgrounds */
+
+  /* Olive — B2B/trade only. Keeps trade CTAs visually distinct from
+     consumer "Add to cart". Ref: upgrade.md §58. */
+  --color-trade: #55604c;
+  --color-trade-deep: #3e4737;
+  --color-trade-tint: #e6e8e0;
+
+  /* Dark surfaces — for inverted sections (manufacturing, B2B block) */
+  --color-charcoal: #16130f;
+  --color-charcoal-soft: #262019;
+
+  /* Sage — FORME-style colour-block surface for the collections story. */
+  --color-sage: #5d7160; /* 4.9:1 with canvas text */
+  --color-sage-deep: #4a5b4d;
+
+  /* Feedback */
+  --color-success: #4a6b4f;
+  --color-danger: #8c3a2e;
+
+  /* ---------- TYPE ----------
+     Three voices, each with one job:
+     Anton    — condensed poster display (hero, section statements)
+     Gilda    — high-contrast didone serif (titles, product names)
+     Geist    — UI + body */
+  --font-display: var(--font-gilda), ui-serif, Georgia, serif;
+  --font-condensed: var(--font-anton), "Arial Narrow", Impact, sans-serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+
+  /* Poster scale for condensed display type */
+  --text-mega: clamp(3.4rem, 0.9rem + 8.4vw, 10.5rem);
+  --text-mega--line-height: 0.88;
+  --text-mega--letter-spacing: -0.005em;
+
+  /* Fluid display scale — clamp(min, preferred, max) */
+  --text-hero: clamp(2.75rem, 1.2rem + 6.6vw, 7.5rem);
+  --text-hero--line-height: 0.94;
+  --text-hero--letter-spacing: -0.025em;
+
+  --text-display: clamp(2.25rem, 1.1rem + 4.6vw, 5rem);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.02em;
+
+  --text-title: clamp(1.75rem, 1.1rem + 2.4vw, 3rem);
+  --text-title--line-height: 1.06;
+  --text-title--letter-spacing: -0.015em;
+
+  --text-heading: clamp(1.375rem, 1.1rem + 1.1vw, 1.875rem);
+  --text-heading--line-height: 1.2;
+  --text-heading--letter-spacing: -0.01em;
+
+  /* Eyebrow — wide-tracked uppercase micro-label. The ENOLA/CALLCK device. */
+  --text-eyebrow: 0.6875rem;
+  --text-eyebrow--line-height: 1;
+  --text-eyebrow--letter-spacing: 0.22em;
+
+  --text-lede: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  --text-lede--line-height: 1.6;
+
+  /* ---------- SHAPE ----------
+     References use generously rounded full-bleed imagery. */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-2xl: 2.25rem;
+
+  /* ---------- ELEVATION ----------
+     Warm-tinted shadows. Never neutral grey — grey shadows on an ivory
+     canvas read as dirt. */
+  --shadow-sm: 0 1px 2px rgb(60 44 30 / 0.05);
+  --shadow-md: 0 4px 16px -4px rgb(60 44 30 / 0.1);
+  --shadow-lg: 0 18px 48px -12px rgb(60 44 30 / 0.16);
+  --shadow-xl: 0 32px 80px -20px rgb(60 44 30 / 0.22);
+
+  /* ---------- MOTION ----------
+     Slow and controlled. upgrade.md §3: "slow, controlled transitions
+     rather than aggressive motion." */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --animate-marquee: marquee 44s linear infinite;
+  --animate-fade-up: fade-up 0.7s var(--ease-out-soft) both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+}
+
+/* Hero intro — CSS, not JS, so it runs from the very first paint instead of
+   flashing the server-rendered text and then hiding it for hydration. */
+@keyframes line-up {
+  from {
+    transform: translateY(105%);
+  }
+}
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+}
+@keyframes video-settle {
+  from {
+    transform: scale(1.12);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Offset anchor targets so the sticky header never covers them */
+    scroll-padding-top: 6rem;
+    overflow-x: clip;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+
+
+  /* Visible, on-brand focus. Never remove without replacing. */
+  :focus-visible {
+    outline: 2px solid var(--color-bronze-deep);
+    outline-offset: 3px;
+    border-radius: var(--radius-xs);
+  }
+
+  ::selection {
+    background-color: var(--color-bronze);
+    color: var(--color-canvas);
+  }
+
+  /* Media defaults to block — kills the mystery 4px descender gap */
+  img,
+  video,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+
+@layer utilities {
+  /* Scroll-reveal primitive. Elements start hidden and are revealed by
+     IntersectionObserver adding [data-revealed]. Falls back to visible
+     when JS is off (see .no-js rule) or motion is reduced. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(1.75rem);
+    transition:
+      opacity 0.9s var(--ease-out-soft),
+      transform 0.9s var(--ease-out-soft);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .reveal[data-revealed="true"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Frosted glass — web approximation (backdrop-filter + inner edge light),
+     after the "Aura" reference card. Solid fallback below. */
+  .glass {
+    background: linear-gradient(135deg, rgb(250 247 242 / 0.22), rgb(250 247 242 / 0.06)),
+      rgb(28 24 21 / 0.18);
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    border: 1px solid rgb(250 247 242 / 0.22);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.28),
+      0 24px 60px -20px rgb(20 14 8 / 0.45);
+  }
+  .glass-light {
+    background: rgb(250 247 242 / 0.86);
+    backdrop-filter: blur(20px) saturate(170%);
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    border: 1px solid rgb(255 255 255 / 0.6);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.7),
+      0 12px 40px -16px rgb(60 44 30 / 0.28);
+  }
+
+  /* Masked line reveal: the line's box clips, the inner span rises. */
+  .line-mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.04em;
+  }
+  .line-mask > span {
+    display: block;
+    animation: line-up 1.15s var(--ease-out-soft) both;
+    animation-delay: var(--d, 0ms);
+  }
+  .hero-in {
+    animation: hero-in 1s var(--ease-out-soft) both;
+    animation-delay: var(--d, 0ms);
+  }
+  .video-settle {
+    animation: video-settle 2.4s var(--ease-out-soft) both;
+  }
+
+  /* Hairline rule in the brand's warm tone */
+  .rule {
+    border-top: 1px solid var(--color-stone);
+  }
+
+  /* Edge-fade mask for marquees / horizontal scrollers */
+  .mask-edges {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black min(6rem, 12vw),
+      black calc(100% - min(6rem, 12vw)),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black min(6rem, 12vw),
+      black calc(100% - min(6rem, 12vw)),
+      transparent
+    );
+  }
+
+  /* Hide scrollbar on horizontal collection rails without losing scroll */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Screen-reader-only, but focusable (skip link) */
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* ============================================================
+   NATIVE DISCLOSURE
+   <details name="…"> is an exclusive accordion with zero JS. These rules
+   animate the open/close where the browser supports ::details-content;
+   everywhere else the panel simply appears, which is the right fallback.
+   ============================================================ */
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
+  details::details-content {
+    block-size: 0;
+    overflow: clip;
+    opacity: 0;
+    transition:
+      block-size 0.5s var(--ease-out-soft),
+      opacity 0.35s var(--ease-out-soft),
+      content-visibility 0.5s allow-discrete;
+  }
+
+  details[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   upgrade.md §41: the premium experience must never depend on animation.
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============================================================
+   MOBILE / LOW-POWER
+   backdrop-filter re-samples everything behind it on every frame. Over a
+   playing video or a scrolling page that is the single most expensive
+   thing on a phone GPU, so below lg the glass becomes a flat tint.
+   ============================================================ */
+
+@media (max-width: 1023px) {
+  .glass {
+    background: rgb(22 19 15 / 0.62);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.18);
+  }
+  .glass-light {
+    background: rgb(250 247 242 / 0.96);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: rgb(28 24 21 / 0.88);
+    backdrop-filter: none;
+  }
+  .glass-light {
+    background: var(--color-canvas);
+    backdrop-filter: none;
+  }
+}
